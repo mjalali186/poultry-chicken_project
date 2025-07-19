@@ -42,7 +42,7 @@ for result in results:
         #results = model(frame) # Adjust confidence threshold
 
         # Annotate the frame with predictions
-        annotated_frame = result.plot( )
+        annotated_frame = result.plot( labels=False)
 
         # Display the annotated frame
         #cv2.imshow("YOLO Predictions", annotated_frame)

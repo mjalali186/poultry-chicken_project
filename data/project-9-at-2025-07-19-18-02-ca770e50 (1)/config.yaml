@@ -1,0 +1,6 @@
+path : C:/Users/Mahdi/Desktop/New folder/project-9-at-2025-07-19-18-02-ca770e50 (1)
+train: images
+val: images
+#classes
+names:
+  0: chicken

@@ -5,13 +5,19 @@ import torch
 import numpy as np
 
 model = YOLO("trained models/yolo11s_trained.pt" , task = "detect", verbose = True,)
+
+# video_path= r'C:\Users\Mahdi\Desktop\New folder\full_video.mp4'.replace('\\','/')
+# output_video_path='output_videos/full_outputvideo.mp4'
+
+
 video_path= r'data\Project_20250719_085238_1.mp4'.replace('\\','/')
-output_video_path='output_videos'
+output_video_path='output_videos/outputvideo.mp4'
 
 results = model(video_path,stream = True,)  # return a list of Results objects
 
 # Open the video file
 cap = cv2.VideoCapture(video_path)
+
 # Get video properties for output video writer
 fps = int(cap.get(cv2.CAP_PROP_FPS))
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -25,8 +31,9 @@ out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 if not cap.isOpened():
     print("Error: Could not open video.")
     exit()
+
 for result in results:
-    while cap.isOpened():
+    if cap.isOpened():
         ret, frame = cap.read()
         if not ret:
             break
@@ -35,7 +42,7 @@ for result in results:
         #results = model(frame) # Adjust confidence threshold
 
         # Annotate the frame with predictions
-        annotated_frame = result.plot()
+        annotated_frame = result.plot( )
 
         # Display the annotated frame
         #cv2.imshow("YOLO Predictions", annotated_frame)

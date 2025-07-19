@@ -8,6 +8,8 @@ model = YOLO("trained models/yolo11s_trained.pt" , task = "detect", verbose = Tr
 video_path= r'data\Project_20250719_085238_1.mp4'.replace('\\','/')
 output_video_path='output_videos'
 
+results = model(video_path,stream = True,)  # return a list of Results objects
+
 # Open the video file
 cap = cv2.VideoCapture(video_path)
 # Get video properties for output video writer
@@ -23,29 +25,30 @@ out = cv2.VideoWriter(output_video_path, fourcc, fps, (width, height))
 if not cap.isOpened():
     print("Error: Could not open video.")
     exit()
+for result in results:
+    while cap.isOpened():
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-while cap.isOpened():
-    ret, frame = cap.read()
-    if not ret:
-        break
+        # Perform inference on the frame
+        #results = model(frame) # Adjust confidence threshold
 
-    # Perform inference on the frame
-    results = model(frame) # Adjust confidence threshold
+        # Annotate the frame with predictions
+        annotated_frame = result.plot()
 
-    # Annotate the frame with predictions
-    annotated_frame = results[0].plot()
-
-    # Display the annotated frame
-    #cv2.imshow("YOLO Predictions", annotated_frame)
-    #if cv2.waitKey(1) & 0xFF == ord('q'):
-    #    break
+        # Display the annotated frame
+        #cv2.imshow("YOLO Predictions", annotated_frame)
+        #if cv2.waitKey(1) & 0xFF == ord('q'):
+        #    break
     
-    # Write the annotated frame to the output video
-    out.write(annotated_frame)
-    # Exit on 'q' key press
+        # Write the annotated frame to the output video
+        out.write(annotated_frame)
+        # Exit on 'q' key press
     
 
 # Release resources
 cap.release()
 out.release()
 cv2.destroyAllWindows()
+print('end')
